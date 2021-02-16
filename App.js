@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     // justifyContent: "center", // main
     // alignItems: "center", // secondary
     // flexWrap: "wrap", 
-    backgroundColor: '#00FF0000'
+    backgroundColor: '#00FF00FF'
   },
 });

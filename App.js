@@ -4,10 +4,10 @@ import { SafeAreaView, StyleSheet, Text, View, Platform } from 'react-native';
 import MainScreen from './src/screens/mainScreen/main';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import SPEED from './src/observables/speed';
-import * as ScreenOrientation from 'expo-screen-orientation';
+//import * as ScreenOrientation from 'expo-screen-orientation';
 
 
-const client = new W3CWebSocket('ws://192.168.1.33:4000')
+const client = new W3CWebSocket('ws://192.168.100.1:4000')
 
 export default function App() {
 
@@ -19,7 +19,7 @@ export default function App() {
     var data = message.data
     data = JSON.parse(data)
     if ('speed' in data) {
-      SPEED.setValue(data.speed);
+      SPEED.setValue(parseInt(data.speed));
     }
     console.log(data);
   }

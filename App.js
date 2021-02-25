@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet, Text, View, Platform } from 'react-native';
 import MainScreen from './src/screens/mainScreen/main';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import SPEED from './src/observables/speed';
+import RPM from './src/observables/rpm';
 //import * as ScreenOrientation from 'expo-screen-orientation';
 
 
@@ -20,6 +21,8 @@ export default function App() {
     data = JSON.parse(data)
     if ('speed' in data) {
       SPEED.setValue(parseInt(data.speed));
+    } else if ('rpm' in data) {
+      RPM.setValue(parseInt(data.rpm))
     }
     console.log(data);
   }

@@ -5,7 +5,7 @@ import MainScreen from './src/screens/mainScreen/main';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import SPEED from './src/observables/speed';
 import RPM from './src/observables/rpm';
-//import * as ScreenOrientation from 'expo-screen-orientation';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 
 const client = new W3CWebSocket('ws://192.168.100.1:4000')

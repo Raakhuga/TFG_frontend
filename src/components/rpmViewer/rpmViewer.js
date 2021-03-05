@@ -14,7 +14,7 @@ const RpmViewer = (props) => {
     
     var lines = [];
 
-    var maxRpm = 5000;
+    var maxRpm = 200;
     
     var frame = {
         height: 0,

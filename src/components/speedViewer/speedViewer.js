@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { StyleSheet } from 'react-native';
+import MAX_SPEED from '../../observables/max_speed.js';
 import SPEED from '../../observables/speed.js';
 import styles from './speedViewer.style.js'
 
@@ -14,8 +15,6 @@ const SpeedViewer = (props) => {
     const step = (finalDeg - startingDeg)/numberOfLines
     
     var lines = [];
-
-    var maxVel = 200;
     
     var frame = {
         height: 0,
@@ -24,6 +23,11 @@ const SpeedViewer = (props) => {
     
     const minSize = () => {
         return frame.height <= frame.width ? frame.height : frame.width;
+    }
+
+    const updateMaxSpeed = (max_vel) => {
+        setMaxVel(max_vel);
+        paintLines(actualVel);
     }
 
     const paintLines = (vel) => {
@@ -61,8 +65,6 @@ const SpeedViewer = (props) => {
         setTextSize(size * 0.05)
     }
 
-    var isOnTemplate = Array(12).fill(false);
-
     const [height, setHeight] = useState(0);
     const [width, setWidth] = useState(0);
     const [r, setR] = useState(0);
@@ -70,6 +72,7 @@ const SpeedViewer = (props) => {
     const [textSize, setTextSize] = useState(0);
     const [lightedLines, setLightedLines] = useState(0);
     const [actualVel, setActualVel] = useState(0);
+    const [maxVel, setMaxVel] = useState(0);
     
     const getSizes = (event) => {
         frame.height = event.nativeEvent.layout.height
@@ -80,6 +83,7 @@ const SpeedViewer = (props) => {
     constructSpedometer();
 
     SPEED.registerObserver(paintLines)
+    MAX_SPEED.registerObserver(updateMaxSpeed)
 
     return (
         <View onLayout={getSizes} style={styles.container}>

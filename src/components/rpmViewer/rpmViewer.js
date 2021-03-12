@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, View } from 'react-native';
+import MAX_RPM from '../../observables/max_rpm.js';
 import RPM from '../../observables/rpm.js';
 import styles from './rpmViewer.style.js'
 
@@ -14,7 +15,6 @@ const RpmViewer = (props) => {
     
     var lines = [];
 
-    var maxRpm = 200;
     
     var frame = {
         height: 0,
@@ -23,6 +23,11 @@ const RpmViewer = (props) => {
     
     const minSize = () => {
         return frame.height <= frame.width ? frame.height : frame.width;
+    }
+
+    const updateRpm = (max_rpm) => {
+        setMaxRpm(max_rpm);
+        paintLines(actualRpm);
     }
 
     const paintLines = (rpm) => {
@@ -67,6 +72,7 @@ const RpmViewer = (props) => {
     const [textSize, setTextSize] = useState(0);
     const [lightedLines, setLightedLines] = useState(0);
     const [actualRpm, setActualRpm] = useState(0);
+    const [maxRpm, setMaxRpm] = useState(0);
     
     const getSizes = (event) => {
         frame.height = event.nativeEvent.layout.height
@@ -77,6 +83,7 @@ const RpmViewer = (props) => {
     constructRpmViewer();
 
     RPM.registerObserver(paintLines)
+    MAX_RPM.registerObserver(updateRpm)
 
     return (
         <View onLayout={getSizes} style={styles.container}>

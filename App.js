@@ -5,6 +5,8 @@ import MainScreen from './src/screens/mainScreen/main';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import SPEED from './src/observables/speed';
 import RPM from './src/observables/rpm';
+import MAX_SPEED from './src/observables/max_speed';
+import MAX_RPM from './src/observables/max_rpm';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 
@@ -19,12 +21,15 @@ export default function App() {
   client.onmessage = (message) => {
     var data = message.data
     data = JSON.parse(data)
-    if ('speed' in data) {
+    if ('car' in data) {
+      MAX_SPEED.setValue(parseInt(data.car.max_speed));
+      MAX_RPM.setValue(parseInt(data.car.max_rpm));
+    }
+    else if ('speed' in data) {
       SPEED.setValue(parseInt(data.speed));
     } else if ('rpm' in data) {
       RPM.setValue(parseInt(data.rpm))
     }
-    console.log(data);
   }
   if (Platform.OS === 'ios' || Platform.OS === 'android')
     ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT)

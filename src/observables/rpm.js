@@ -1,4 +1,4 @@
-class SPEED {
+class RPM {
     static _value = 0;
     static _observers = [];
 
@@ -23,4 +23,4 @@ class SPEED {
     }
 }
 
-module.exports = SPEED;
+module.exports = RPM;

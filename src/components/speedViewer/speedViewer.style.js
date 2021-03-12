@@ -39,6 +39,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignContent: 'center',
         color: '#00FF00FF',
-        backgroundColor: '#00000000'        
+        backgroundColor: '#00000000',
+        textAlign: "center"        
     }
 });

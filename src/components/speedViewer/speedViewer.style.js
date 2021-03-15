@@ -9,8 +9,6 @@ export default StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: '#000000FF',
-        borderWidth: 1,
-        borderColor: "#0000FFFF"
     },
     line: {
         flex: 1,

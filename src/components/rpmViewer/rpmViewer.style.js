@@ -9,8 +9,6 @@ export default StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: '#000000FF',
-        borderWidth: 1,
-        borderColor: "#0000FFFF"
     },
     line: {
         flex: 1,
@@ -40,6 +38,6 @@ export default StyleSheet.create({
         alignContent: 'center',
         color: '#00FF00FF',
         backgroundColor: '#00000000',
-        textAlign: "center"      
+        textAlign: "center",
     }
 });

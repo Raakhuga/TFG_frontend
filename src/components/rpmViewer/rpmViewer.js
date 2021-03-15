@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import MAX_RPM from '../../observables/max_rpm.js';
-import RPM from '../../observables/rpm.js';
+import { Car } from '../../context/car.js';
 import styles from './rpmViewer.style.js'
 
 
@@ -25,15 +24,9 @@ const RpmViewer = (props) => {
         return frame.height <= frame.width ? frame.height : frame.width;
     }
 
-    const updateRpm = (max_rpm) => {
-        setMaxRpm(max_rpm);
-        paintLines(actualRpm);
-    }
-
     const paintLines = (rpm) => {
         let distance = maxRpm / numberOfLines;
         setLightedLines(rpm / distance);
-        setActualRpm(rpm)
     }
 
     const constructRpmViewer = () => {
@@ -71,8 +64,15 @@ const RpmViewer = (props) => {
     const [borderRadius, setBorderRadius] = useState(0);
     const [textSize, setTextSize] = useState(0);
     const [lightedLines, setLightedLines] = useState(0);
-    const [actualRpm, setActualRpm] = useState(0);
-    const [maxRpm, setMaxRpm] = useState(0);
+
+    const {
+        maxRpm,
+        rpm
+    } = useContext(Car)
+
+    useEffect(() => {
+        paintLines(rpm);
+    })
     
     const getSizes = (event) => {
         frame.height = event.nativeEvent.layout.height
@@ -82,13 +82,10 @@ const RpmViewer = (props) => {
     
     constructRpmViewer();
 
-    RPM.registerObserver(paintLines)
-    MAX_RPM.registerObserver(updateRpm)
-
     return (
         <View onLayout={getSizes} style={styles.container}>
             {lines}
-            <Text style={[styles.text, { fontSize: textSize }]}> {"RPM\n" + String(actualRpm) } </Text>
+            <Text style={[styles.text, { fontSize: textSize }]}> {"RPM\n" + String(rpm) } </Text>
         </View>
     );
 }

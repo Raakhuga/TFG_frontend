@@ -1,13 +1,14 @@
-import React, { useContext } from 'react'
+import React, { createContext, useContext } from 'react'
 import { View } from 'react-native'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-import { Car } from '../context/car';
-import { Data } from '../context/data';
+import { Car } from './car';
+import { Data } from './data';
 
+export const Client = createContext();
 
-const client = new W3CWebSocket('ws://localhost:4000')
+const ws_client = new W3CWebSocket('ws://192.168.1.11:4000')
 
-const Client = (props) => {
+const ClientProvider = (props) => {
 
     const {
         maxSpeed, setMaxSpeed,
@@ -22,11 +23,11 @@ const Client = (props) => {
         wsServer, setWsServer,
     } = useContext(Data)
 
-    client.onopen = () => {
+    ws_client.onopen = () => {
         console.log('WebSocket Client Connected');
     }
 
-    client.onmessage = (message) => {
+    ws_client.onmessage = (message) => {
         var data = message.data
         data = JSON.parse(data)
         if ('car' in data) {
@@ -40,14 +41,19 @@ const Client = (props) => {
         } else if ('distance' in data) {
             setDistance(parseInt(data.distance))
         }
-        console.log(message)
     }
 
+    const saveConfig = (config) => {
+        ws_client.send(config)
+    } 
+
     return(
-        <View style={{ flex: 1, height: '100%', width: '100%'}}>
+        <Client.Provider value={{
+            saveConfig
+        }}>
             {props.children}
-        </View>
+        </Client.Provider>
     );
 }
 
-export default Client;
+export default ClientProvider;

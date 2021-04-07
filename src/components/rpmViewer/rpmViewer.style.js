@@ -16,6 +16,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderWidth: 1,
+        borderColor: '#00FF00AA'
     },
     lineContainer: {
         flex: 1,

@@ -6,7 +6,7 @@ import { Data } from './data';
 
 export const Client = createContext();
 
-const ws_client = new W3CWebSocket('ws://192.168.1.11:4000')
+const ws_client = new W3CWebSocket('ws://192.168.100.1:4000')
 
 const ClientProvider = (props) => {
 
@@ -16,11 +16,13 @@ const ClientProvider = (props) => {
 
         speed, setSpeed,
         rpm, setRpm,
-        distance, setDistance
+        distance, setDistance,
+        setTooClose
     } = useContext(Car);
 
     const {
-        wsServer, setWsServer,
+        configJsonToElems,
+        setDashboards
     } = useContext(Data)
 
     ws_client.onopen = () => {
@@ -30,6 +32,7 @@ const ClientProvider = (props) => {
     ws_client.onmessage = (message) => {
         var data = message.data
         data = JSON.parse(data)
+        console.log(data)
         if ('car' in data) {
             setMaxSpeed(parseInt(data.car.max_speed));
             setMaxRpm(parseInt(data.car.max_rpm));
@@ -40,6 +43,12 @@ const ClientProvider = (props) => {
             setRpm(parseInt(data.rpm))
         } else if ('distance' in data) {
             setDistance(parseInt(data.distance))
+        } else if ('dashboards' in data) {
+            let defaultDashboard = data.dashboards.default
+            setDashboards(data.dashboards);
+            configJsonToElems(JSON.stringify(data.dashboards.dashboards[defaultDashboard]));
+        } else if ('tooClose' in data) {
+            setTooClose(data.tooClose)
         }
     }
 

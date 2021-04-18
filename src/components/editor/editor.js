@@ -61,9 +61,7 @@ const Editor = (props) => {
     const initPos = (evt, gestureState) => {
         if (refMode.current == 'edit') {
             if (typeof(refElems.current) !== 'undefined' && typeof(editIndex) !== 'undefined' ) {
-            
-                console.log(refElems.current)
-                console.log(editIndex.current)
+
                 let point = pointToTile({x: gestureState.x0, y: gestureState.y0})
                 
                 refElems.current[editIndex.current].x_o = point.x; 

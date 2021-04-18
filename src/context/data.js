@@ -34,49 +34,12 @@ const DataProvider = (props) => {
                     z_pos: 2
                 }
             ],
-            asdf: [
-                {
-                    string: 'speedViewer',
-                    x_o: 3,
-                    x_f: 11,
-                    y_o: 0,
-                    y_f: 7,
-                    z_pos: 1
-                },
-                {
-                    string: 'rpmViewer',
-                    x_o: 9,
-                    x_f: 11,
-                    y_o: 1,
-                    y_f: 2,
-                    z_pos: 2
-                }
-            ],
-            fdsa: [
-                {
-                    string: 'speedViewer',
-                    x_o: 4,
-                    x_f: 11,
-                    y_o: 0,
-                    y_f: 7,
-                    z_pos: 1
-                },
-                {
-                    string: 'rpmViewer',
-                    x_o: 9,
-                    x_f: 11,
-                    y_o: 1,
-                    y_f: 2,
-                    z_pos: 2
-                }
-            ],
         }
     });
     const [dashboards, setDataDashboards] = useState(refDashboards.current);
     
     const setDashboards = (dict) => {
         setDataDashboards(dict);
-        console.log(dict)
         refDashboards.current = dict;
     }
 
@@ -138,6 +101,9 @@ const DataProvider = (props) => {
             
             case 'rpmViewer':
                 return <RpmViewer/>;
+
+            case 'distanceViewer':
+                return <DistanceViewer/>;
             
             default:
                 return <View style={{backgroundColor: '#00F', zIndex: 30, width: '100%', height: '100%'}}/>;
@@ -179,7 +145,6 @@ const DataProvider = (props) => {
     }
 
     const configJsonToElems = (config) => {
-        
         let dict = JSON.parse(config);
 
         var aux_elems = new Array();

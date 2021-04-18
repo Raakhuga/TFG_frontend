@@ -12,6 +12,8 @@ const CarProvider = (props) => {
     const [rpm, setRpm] = useState(0);
     const [distance, setDistance] = useState(0);
 
+    const [tooClose, setTooClose] = useState(false);
+
 
     return (
         <Car.Provider value = {{
@@ -20,7 +22,9 @@ const CarProvider = (props) => {
 
             speed, setSpeed,
             rpm, setRpm,
-            distance, setDistance
+            distance, setDistance,
+
+            tooClose, setTooClose
         }}>
             {props.children}
         </Car.Provider>

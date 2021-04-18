@@ -35,9 +35,7 @@ const LeftMenu = (props) => {
     const selectElement = (element) => {
         let index = 0
         addElem(element);
-        console.log(index);
         setEditIndex(index);
-        saveDashboard();
         setMode('edit');
     }
     

@@ -77,9 +77,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
         
     },
-    bottomButton: {
-
-    },
     configurationMenu: {
         flex: 1,
         width: '80%',
@@ -90,7 +87,11 @@ const styles = StyleSheet.create({
         color: '#eee',
         fontWeight: 'bold',
         fontSize: Dimensions.get('window').height*0.02,
-        marginTop: 10
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignContent: 'center',
+        alignItems: 'center'
     },
     configInputTxt: {
         flex: 2,
@@ -108,14 +109,60 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         overflow: 'hidden'
     },
-    dashboardTxt: {
-        fontWeight: 'bold',
-        fontSize: Dimensions.get('window').height*0.02,
+    dashboardRow: {
+        flex: 1,
+        flexDirection: 'row',
         marginVertical: 10,
         marginHorizontal: 10,
         padding: 10,
+        borderRadius: 10,
+    },
+    dashboardTxt: {
+        flex: 5,
+        fontWeight: 'bold',
+        fontSize: Dimensions.get('window').height*0.02,
+        alignSelf: 'center'
+    },
+    dasboardButton: {
+        flex: 1, 
+        color: '#eee'
+    },
+    plusButton: {
+        color: '#eee'
+    },
+    dashboardTitle: {
+        color: '#eee',
+        fontWeight: 'bold',
+        fontSize: Dimensions.get('window').height*0.02,
+        height: '100%',
+        alignSelf: 'center'
+    },
+    dimmBackground: {
+        flex: 1,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
+    },
+    newDashboardView: {
+        height: '20%',
+        width: '90%',
+        backgroundColor: '#ccc',   
         borderRadius: 10
-    }
+    },
+    popupButtons: {
+        flex: 1,
+        margin: 10,
+        marginBottom: 20,
+        flexDirection: 'row-reverse',
+        justifyContent: 'space-between',
+        alignContent: 'center',
+        alignItems: 'center'
+    },
 
   });
 

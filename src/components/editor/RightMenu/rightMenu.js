@@ -39,6 +39,10 @@ const RightMenu = (props) => {
 
     const [configMode, setConfigMode] = useState(false);
 
+    const [newDashboard, setNewDashboard] = useState(false);
+
+    const newDashboardName = useRef('');
+
     const pressComponent = (index) => {
         setEditIndex(index);
         setMode('edit');
@@ -65,11 +69,12 @@ const RightMenu = (props) => {
 
     const saveConfigBtn = () => {
         let config = {
-            maxRpm: maxRpm,
-            maxSpeed: maxSpeed,
-            dashboards: refDashboards.current
+            configuration: {
+                maxRpm: maxRpm,
+                maxSpeed: maxSpeed,
+                dashboards: refDashboards.current
+            }
         };
-        console.log(config)
         saveConfig(JSON.stringify(config));
     }
 
@@ -105,6 +110,37 @@ const RightMenu = (props) => {
         configJsonToElems(JSON.stringify(aux['dashboards'][string]));
     }
 
+    const newDasbhoardPress = () => {
+        setNewDashboard(true);
+    }
+
+    const closePopup = () => {
+        newDashboardName.current = '';
+        setNewDashboard(false);
+    }
+
+    const createDashboard = () => {
+        let aux = refDashboards.current;
+        aux['dashboards'][newDashboardName.current] = [];
+        aux['default'] = newDashboardName.current;
+        setDashboards({...aux});
+        configJsonToElems(JSON.stringify(aux['dashboards'][newDashboardName.current]));
+        newDashboardName.current = '';
+        setNewDashboard(false);
+    }
+
+    const deleteDashboard = (name) => {
+        let aux = refDashboards.current;
+        if (aux['dashboards'].hasOwnProperty(name)) delete aux['dashboards'][name];
+        if (aux['default'] == name) {
+            let keys = Object.keys(aux['dashboards'])
+            aux['default'] = keys.length > 0 ? keys[0] : ''
+            if (aux['default'] != '') configJsonToElems(JSON.stringify(aux['dashboards'][aux['default']]));
+            else configJsonToElems(JSON.stringify([]));
+        }
+        setDashboards({...aux});
+    }
+
     const content = (configMode) 
         ?
             <View style={styles.configurationMenu}>
@@ -112,20 +148,48 @@ const RightMenu = (props) => {
                 <TextInput style={styles.configInputTxt} placeholder={String(maxSpeed)} onChangeText={(text) => setMaxSpeed(parseInt(text))} keyboardType={'numeric'}/>
                 <Text style={styles.configItemTxt}>Max RPM</Text>
                 <TextInput style={styles.configInputTxt} placeholder={String(maxRpm)} onChangeText={(text) => setMaxRpm(parseInt(text))} keyboardType={'numeric'}/>
-                <Text style={styles.configItemTxt}>Dashboards</Text>
+                <View style={styles.configItemTxt}>
+                    <Text style={styles.dashboardTitle}>Dashboards</Text>
+                    <TouchableOpacity style={styles.plusButton} onPress={() => newDasbhoardPress()}>
+                        <AntDesign style={styles.plusButton} name={'plus'} size={Dimensions.get('window').width*0.02} />
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.dashboardContainer}>
                     <FlatList
                         data={Object.keys(dashboards['dashboards'])}
                         renderItem={({item}) => (
-                            <TouchableOpacity onPress={() => setDefault(item)}>
+                            <TouchableOpacity style={[styles.dashboardRow, {
+                                backgroundColor: (dashboards['default'] === item) ? '#ddd' : 'transparent'
+                            }]} onPress={() => setDefault(item)}>
                                 <Text style={[styles.dashboardTxt, {
-                                    backgroundColor: (dashboards['default'] === item) ? '#ddd' : 'transparent',
                                     color: (dashboards['default'] === item) ? '#aaa' : '#eee'
                                 }]}>{item}</Text>
+                                <TouchableOpacity style={styles.dashboardButton} onPress={() => deleteDashboard(item)}>
+                                    <AntDesign style={{color: (dashboards['default'] === item) ? '#aaa' : '#eee'}} name={'close'} size={Dimensions.get('window').width*0.02} />
+                                </TouchableOpacity>
                             </TouchableOpacity>
                         )}
                     />
                 </View>
+                {newDashboard ? 
+                    <View style={styles.dimmBackground}>
+                        <View style={styles.newDashboardView}>
+                            <Text style={[styles.configItemTxt, {padding: 10}]}>New dashboard</Text>
+                            <TextInput style={[styles.configInputTxt, {margin: 10}]} placeholder={'enter name'} onChangeText={(text) => {
+                                newDashboardName.current = text;
+                            } } />
+                            <View style={styles.popupButtons}>
+                                <TouchableOpacity onPress={() => createDashboard()}>
+                                    <AntDesign name={'check'} size={Dimensions.get('window').width*0.02} />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => closePopup()}>
+                                    <AntDesign name={'close'} size={Dimensions.get('window').width*0.02} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                :
+                    null}
             </View>
         :
             <ScrollView style={styles.list} contentContainerStyle={styles.listContainer}>
@@ -157,11 +221,11 @@ const RightMenu = (props) => {
             <Text style={styles.title}>{configMode ? 'Configuration' : 'Layers' }</Text>
             {content}
             <View style={styles.bottomMenu}>
-                <TouchableOpacity style={styles.bottomButton} onPress={() => openConfig()}>
-                    <AntDesign name={'setting'} size={Dimensions.get('window').width*0.02} />
+                <TouchableOpacity onPress={() => openConfig()}>
+                    <AntDesign name={configMode ? 'ellipsis1' : 'setting' } size={Dimensions.get('window').width*0.02} />
                 </TouchableOpacity>
                 {configMode ?
-                    <TouchableOpacity style={styles.bottomButton} onPress={() => saveConfigBtn()}>
+                    <TouchableOpacity onPress={() => saveConfigBtn()}>
                         <AntDesign name={'save'} size={Dimensions.get('window').width*0.02} />
                     </TouchableOpacity> : null
                 }

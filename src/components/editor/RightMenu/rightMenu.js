@@ -10,19 +10,22 @@ import { Client } from '../../../context/client';
 
 const RightMenu = (props) => {
 
-    const pos = useRef(new Animated.Value(Dimensions.get('window').width)).current
- 
+    
     const {
+        screenFrame,
+        
         dashboards, setDashboards, refDashboards,
         editIndex, setEditIndex,
         mode, setMode,
         elems, setElems,
-
+        
         addElem, moveElem, delElem,
-
+        
         configJsonToElems,
         saveDashboard
     } = useContext(Data)
+    
+    const pos = useRef(new Animated.Value(screenFrame.width)).current
 
     const {
         maxSpeed, setMaxSpeed,
@@ -88,13 +91,13 @@ const RightMenu = (props) => {
                     </TouchableOpacity>
                     <View style={styles.buttonsView}>
                         <TouchableOpacity style={styles.button} onPress={ () => pressUp(i, i-1) }>
-                            <AntDesign name={'caretup'} size={Dimensions.get('window').width*0.02} />
+                            <AntDesign name={'caretup'} size={screenFrame.width*0.02} />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.button} onPress={ () => deleteComponent(i) }>
-                            <AntDesign name={'minuscircle'} size={Dimensions.get('window').width*0.02} />
+                            <AntDesign name={'minuscircle'} size={screenFrame.width*0.02} />
                         </TouchableOpacity> 
                         <TouchableOpacity style={styles.button} onPress={ () => pressDown(i, i+1) }>
-                            <AntDesign name={'caretdown'} size={Dimensions.get('window').width*0.02} />
+                            <AntDesign name={'caretdown'} size={screenFrame.width*0.02} />
                         </TouchableOpacity>  
                     </View>
                 </View>
@@ -136,7 +139,11 @@ const RightMenu = (props) => {
             let keys = Object.keys(aux['dashboards'])
             aux['default'] = keys.length > 0 ? keys[0] : ''
             if (aux['default'] != '') configJsonToElems(JSON.stringify(aux['dashboards'][aux['default']]));
-            else configJsonToElems(JSON.stringify([]));
+            else {
+                aux['default'] = 'default'
+                aux['dashboards']['default'] = []
+                configJsonToElems(JSON.stringify(aux['dashboards']['default']));
+            }
         }
         setDashboards({...aux});
     }
@@ -144,14 +151,28 @@ const RightMenu = (props) => {
     const content = (configMode) 
         ?
             <View style={styles.configurationMenu}>
-                <Text style={styles.configItemTxt}>Max Vel</Text>
-                <TextInput style={styles.configInputTxt} placeholder={String(maxSpeed)} onChangeText={(text) => setMaxSpeed(parseInt(text))} keyboardType={'numeric'}/>
-                <Text style={styles.configItemTxt}>Max RPM</Text>
-                <TextInput style={styles.configInputTxt} placeholder={String(maxRpm)} onChangeText={(text) => setMaxRpm(parseInt(text))} keyboardType={'numeric'}/>
-                <View style={styles.configItemTxt}>
-                    <Text style={styles.dashboardTitle}>Dashboards</Text>
+                <Text style={[styles.configItemTxt,{
+                    fontSize: screenFrame.height*0.02
+                }]}>Max Vel</Text>
+                <TextInput style={[styles.configInputTxt, {
+                    height: screenFrame.height*0.03,
+                    fontSize: screenFrame.height*0.02,
+                }]} placeholder={String(maxSpeed)} onChangeText={(text) => setMaxSpeed(parseInt(text))} keyboardType={'numeric'}/>
+                <Text style={[styles.configItemTxt,{
+                    fontSize: screenFrame.height*0.02
+                }]}>Max RPM</Text>
+                <TextInput style={[styles.configInputTxt, {
+                    height: screenFrame.height*0.03,
+                    fontSize: screenFrame.height*0.02,
+                }]} placeholder={String(maxRpm)} onChangeText={(text) => setMaxRpm(parseInt(text))} keyboardType={'numeric'}/>
+                <View style={[styles.configItemTxt,{
+                    fontSize: screenFrame.height*0.02
+                }]}>
+                    <Text style={[styles.dashboardTitle, {
+                        fontSize: screenFrame.height*0.02
+                    }]}>Dashboards</Text>
                     <TouchableOpacity style={styles.plusButton} onPress={() => newDasbhoardPress()}>
-                        <AntDesign style={styles.plusButton} name={'plus'} size={Dimensions.get('window').width*0.02} />
+                        <AntDesign style={styles.plusButton} name={'plus'} size={screenFrame.width*0.02} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.dashboardContainer}>
@@ -162,10 +183,11 @@ const RightMenu = (props) => {
                                 backgroundColor: (dashboards['default'] === item) ? '#ddd' : 'transparent'
                             }]} onPress={() => setDefault(item)}>
                                 <Text style={[styles.dashboardTxt, {
-                                    color: (dashboards['default'] === item) ? '#aaa' : '#eee'
+                                    color: (dashboards['default'] === item) ? '#aaa' : '#eee',
+                                    fontSize: screenFrame.height*0.02,
                                 }]}>{item}</Text>
                                 <TouchableOpacity style={styles.dashboardButton} onPress={() => deleteDashboard(item)}>
-                                    <AntDesign style={{color: (dashboards['default'] === item) ? '#aaa' : '#eee'}} name={'close'} size={Dimensions.get('window').width*0.02} />
+                                    <AntDesign style={{color: (dashboards['default'] === item) ? '#aaa' : '#eee'}} name={'close'} size={screenFrame.width*0.02} />
                                 </TouchableOpacity>
                             </TouchableOpacity>
                         )}
@@ -174,16 +196,23 @@ const RightMenu = (props) => {
                 {newDashboard ? 
                     <View style={styles.dimmBackground}>
                         <View style={styles.newDashboardView}>
-                            <Text style={[styles.configItemTxt, {padding: 10}]}>New dashboard</Text>
-                            <TextInput style={[styles.configInputTxt, {margin: 10}]} placeholder={'enter name'} onChangeText={(text) => {
+                            <Text style={[styles.configItemTxt, {
+                                fontSize: screenFrame.height*0.02,
+                                paddingLeft: 10
+                            }]}>New dashboard</Text>
+                            <TextInput style={[styles.configInputTxt, {
+                                height: screenFrame.height*0.03,
+                                fontSize: screenFrame.height*0.02,
+                                margin: 10
+                            }]} placeholder={'enter name'} onChangeText={(text) => {
                                 newDashboardName.current = text;
                             } } />
                             <View style={styles.popupButtons}>
                                 <TouchableOpacity onPress={() => createDashboard()}>
-                                    <AntDesign name={'check'} size={Dimensions.get('window').width*0.02} />
+                                    <AntDesign name={'check'} size={screenFrame.width*0.02} />
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => closePopup()}>
-                                    <AntDesign name={'close'} size={Dimensions.get('window').width*0.02} />
+                                    <AntDesign name={'close'} size={screenFrame.width*0.02} />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -197,17 +226,17 @@ const RightMenu = (props) => {
                 componentList
             }
             </ScrollView>
-           
+
     useEffect(() => {
         Animated.timing(
             pos,
             {
-                toValue: (mode == 'menu') ? Dimensions.get('window').width*0.8 : Dimensions.get('window').width,
+                toValue: (mode == 'menu') ? screenFrame.width*0.8 : screenFrame.width,
                 duration: 500,
                 useNativeDriver: true
             }
             ).start();
-    }, [mode])
+    }, [mode, screenFrame])
     
     useEffect(() => {
         setComponentList(updateComponentList(elems));
@@ -218,15 +247,20 @@ const RightMenu = (props) => {
             styles.menu,
             { transform: [{ translateX: pos } ] }
         ]}>
-            <Text style={styles.title}>{configMode ? 'Configuration' : 'Layers' }</Text>
+            <Text style={[styles.title, {
+                height: screenFrame.height*0.075,
+                fontSize: screenFrame.height*0.05,
+            }]}>{configMode ? 'Configuration' : 'Layers' }</Text>
             {content}
-            <View style={styles.bottomMenu}>
+            <View style={[styles.bottomMenu, {
+                height: screenFrame.height*0.075,
+            }]}>
                 <TouchableOpacity onPress={() => openConfig()}>
-                    <AntDesign name={configMode ? 'ellipsis1' : 'setting' } size={Dimensions.get('window').width*0.02} />
+                    <AntDesign name={configMode ? 'ellipsis1' : 'setting' } size={screenFrame.width*0.02} />
                 </TouchableOpacity>
                 {configMode ?
                     <TouchableOpacity onPress={() => saveConfigBtn()}>
-                        <AntDesign name={'save'} size={Dimensions.get('window').width*0.02} />
+                        <AntDesign name={'save'} size={screenFrame.width*0.02} />
                     </TouchableOpacity> : null
                 }
             </View>

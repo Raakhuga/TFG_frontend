@@ -42,8 +42,6 @@ const styles = StyleSheet.create({
     title: {
         backgroundColor: '#aaa',
         width: '100%',
-        height: Dimensions.get('window').height*0.075,
-        fontSize: Dimensions.get('window').height*0.05,
         fontWeight: 'bold',
         color: '#ddd',
         textAlignVertical: 'center',

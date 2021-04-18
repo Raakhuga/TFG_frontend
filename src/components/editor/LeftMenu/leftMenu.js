@@ -6,9 +6,10 @@ import styles from './leftMenu.style';
 
 const LeftMenu = (props) => {
 
-    const pos = useRef(new Animated.Value(-Dimensions.get('window').width * 0.20)).current
-
+    
     const {
+        screenFrame,
+        
         elems, refElems,
         setEditIndex,
         mode, setMode,
@@ -17,17 +18,20 @@ const LeftMenu = (props) => {
         addElem, moveElem, delElem,
         saveDashboard
     } = useContext(Data)
+    
+    const pos = useRef(new Animated.Value(-screenFrame.width * 0.20)).current
+    
 
     useEffect(() => {
         Animated.timing(
             pos,
             {
-                toValue: (mode == 'menu') ? 0 : - Dimensions.get('window').width * 0.20,
+                toValue: (mode == 'menu') ? 0 : - screenFrame.width * 0.20,
                 duration: 500,
                 useNativeDriver: true
             }
             ).start();
-    }, [mode])
+    }, [mode, screenFrame])
     
     const componentList = new Array();
     
@@ -52,7 +56,10 @@ const LeftMenu = (props) => {
             styles.menu,
             { transform: [{ translateX: pos } ] }
         ]}>
-            <Text style={styles.title}>Components</Text>
+            <Text style={[styles.title, {
+                height: screenFrame.height*0.075,
+                fontSize: screenFrame.height*0.05,
+            }]}>Components</Text>
             <ScrollView style={styles.list} contentContainerStyle={styles.listContainer}>
                 {
                     componentList

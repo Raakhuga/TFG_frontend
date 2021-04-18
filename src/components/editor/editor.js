@@ -19,18 +19,30 @@ const Editor = (props) => {
         saveDashboard
     } = useContext(Data)
 
-    var aux_frame = {};
+    const [frame, setFrame] = useState({
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width
+    });
+
+    const aux_frame = useRef({
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width
+    })
     
     const getSizes = (event) => {
-        aux_frame = {
+        setFrame({
+            height: event.nativeEvent.layout.height,
+            width: event.nativeEvent.layout.width
+        })
+        aux_frame.current = {
             height: event.nativeEvent.layout.height,
             width: event.nativeEvent.layout.width
         }
     }
 
     const pointToTile = (point) => {
-        let x = point.x/aux_frame.width
-        let y = point.y/aux_frame.height
+        let x = point.x/aux_frame.current.width
+        let y = point.y/aux_frame.current.height
         let tile_x = Math.floor(x * cols)
         let tile_y = Math.floor(y * rows)
         return {x: tile_x, y: tile_y}
@@ -161,21 +173,21 @@ const Editor = (props) => {
     const leftButton = (mode === 'edit') 
         ? 
             <View style={[styles.menu, {
-                height: Dimensions.get('window').height*0.2,
-                width: Dimensions.get('window').height*0.2,
-                borderRadius: Dimensions.get('window').height*0.1,
+                height: frame.height*0.2,
+                width: frame.height*0.2,
+                borderRadius: frame.height*0.1,
                 transform: [
-                    { translateX: - Dimensions.get('window').height*0.1 },
-                    { translateY: Dimensions.get('window').height*0.9}
+                    { translateX: - frame.height*0.1 },
+                    { translateY: frame.height*0.9}
                 ]
             }]}>
                 <TouchableOpacity style={[styles.button, {
                     transform: [
-                        { translateX: Dimensions.get('window').height*0.04 },
-                        { translateY: -Dimensions.get('window').height*0.04 }
+                        { translateX: frame.height*0.04 },
+                        { translateY: -frame.height*0.04 }
                     ]
                 }]} onPress={() => pressCancel()}>
-                    <AntDesign name={'closecircle'} size={Dimensions.get('window').width*0.02} />
+                    <AntDesign name={'closecircle'} size={frame.width*0.02} />
                 </TouchableOpacity>
             </View> 
         :
@@ -184,21 +196,21 @@ const Editor = (props) => {
     const rightButton = (mode === 'edit' || mode === 'view') 
         ? 
             <View style={[styles.menu, {
-                height: Dimensions.get('window').height*0.2,
-                width: Dimensions.get('window').height*0.2,
-                borderRadius: Dimensions.get('window').height*0.1,
+                height: frame.height*0.2,
+                width: frame.height*0.2,
+                borderRadius: frame.height*0.1,
                 transform: [
-                    { translateX: Dimensions.get('window').width - Dimensions.get('window').height*0.1 },
-                    { translateY: Dimensions.get('window').height*0.9}
+                    { translateX: frame.width - frame.height*0.1 },
+                    { translateY: frame.height*0.9}
                 ]
             }]}>
                 <TouchableOpacity style={[styles.button, {
                     transform: [
-                        { translateX: -Dimensions.get('window').height*0.04 },
-                        { translateY: -Dimensions.get('window').height*0.04 }
+                        { translateX: -frame.height*0.04 },
+                        { translateY: -frame.height*0.04 }
                     ]
                 }]} onPress={() => (mode === 'edit') ? pressSave() : pressConfig()}>
-                    <AntDesign name={(mode === 'edit') ? 'checkcircle' : 'ellipsis1'} size={Dimensions.get('window').width*0.02} />
+                    <AntDesign name={(mode === 'edit') ? 'checkcircle' : 'ellipsis1'} size={frame.width*0.02} />
                 </TouchableOpacity>
             </View> 
         :

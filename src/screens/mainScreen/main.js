@@ -11,15 +11,12 @@ import RightMenu from '../../components/editor/RightMenu/rightMenu.js';
 const MainScreen = (props) => {
 
     const {
+        screenFrame, setScreenFrame,
+
         editRect, setEditRect,
         elems, setElems,
         getConfigJson
     } = useContext(Data)
-
-    const [frame, setFrame] = useState({
-        height: 0,
-        width: 0
-    })
 
     const rows = 8;
     const cols = 14;
@@ -28,12 +25,10 @@ const MainScreen = (props) => {
     const t_height = 1/rows;
 
     const getSizes = (event) => {
-        var aux_frame={
+        setScreenFrame({
             height: event.nativeEvent.layout.height,
             width: event.nativeEvent.layout.width
-        };
-        setFrame({});
-        setFrame(aux_frame);
+        });
     }
 
     const printLayer = (elem, z_pos) => {
@@ -46,7 +41,7 @@ const MainScreen = (props) => {
 
         return(
             <View key={uuid.v4()} style={[styles.layer, {zIndex: z_pos}]}>  
-                <Tile marginLeft={s_width*100} marginTop={s_height*frame.height} width={width * 100} height={height * 100} key={uuid.v4()}>
+                <Tile marginLeft={s_width*100} marginTop={s_height*screenFrame.height} width={width * 100} height={height * 100} key={uuid.v4()}>
                     {elem.elem}
                 </Tile>
             </View>
@@ -64,14 +59,14 @@ const MainScreen = (props) => {
     const [elemsToPrint, setElemsToPrint] = useState(new Array());// = printAllElems(elems)
 
     const updateViews = () => {
-        if (frame.height > 0 && frame.width > 0) {
+        if (screenFrame.height > 0 && screenFrame.width > 0) {
             setElemsToPrint(printAllElems(elems))
         }
     }
 
     useEffect(() => {
         updateViews()
-    }, [frame])
+    }, [screenFrame])
 
     useEffect(() => {
         updateViews()

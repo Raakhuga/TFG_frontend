@@ -1,5 +1,5 @@
 import React, { createContext, useState, useRef } from "react";
-import { View } from "react-native";
+import { Dimensions, View } from "react-native";
 import RpmViewer from "../components/rpmViewer/rpmViewer";
 import SpeedViewer from "../components/speedViewer/speedViewer";
 import DistanceViewer from "../components/distanceViewer/distanceViewer"
@@ -9,7 +9,10 @@ export const Data = createContext();
 const DataProvider = (props) => {
     
     // Screen Info
-    const [frame, setFrame] = useState({});
+    const [screenFrame, setScreenFrame] = useState({
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width
+    });
 
     // Dashboard Info
 
@@ -202,7 +205,7 @@ const DataProvider = (props) => {
 
     return (
         <Data.Provider value = {{
-            frame, setFrame,
+            screenFrame, setScreenFrame,
             dashboards, setDashboards, refDashboards,
             editIndex, setEditIndex,
             mode, setMode, refMode,

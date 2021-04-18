@@ -61,8 +61,6 @@ const styles = StyleSheet.create({
     title: {
         backgroundColor: '#aaa',
         width: '100%',
-        height: Dimensions.get('window').height*0.075,
-        fontSize: Dimensions.get('window').height*0.05,
         fontWeight: 'bold',
         color: '#ddd',
         textAlignVertical: 'center',
@@ -70,7 +68,6 @@ const styles = StyleSheet.create({
     }, 
     bottomMenu: {
         width: '80%',
-        height: Dimensions.get('window').height*0.075,
         flexDirection: 'row-reverse',
         justifyContent: 'space-between',
         alignContent: 'center',
@@ -86,21 +83,16 @@ const styles = StyleSheet.create({
         flex: 2,
         color: '#eee',
         fontWeight: 'bold',
-        fontSize: Dimensions.get('window').height*0.02,
         marginTop: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignContent: 'center',
-        alignItems: 'center'
     },
     configInputTxt: {
         flex: 2,
         backgroundColor: '#bbb',
-        height: Dimensions.get('window').height*0.03,
         fontWeight: 'bold',
-        fontSize: Dimensions.get('window').height*0.02,
         borderRadius: 10,
-        padding:10,
+        padding: 5,
         color: '#fff',
     },
     dashboardContainer: {
@@ -114,13 +106,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginVertical: 10,
         marginHorizontal: 10,
-        padding: 10,
+        padding: 5,
         borderRadius: 10,
     },
     dashboardTxt: {
         flex: 5,
         fontWeight: 'bold',
-        fontSize: Dimensions.get('window').height*0.02,
         alignSelf: 'center'
     },
     dasboardButton: {
@@ -133,7 +124,6 @@ const styles = StyleSheet.create({
     dashboardTitle: {
         color: '#eee',
         fontWeight: 'bold',
-        fontSize: Dimensions.get('window').height*0.02,
         height: '100%',
         alignSelf: 'center'
     },
@@ -149,7 +139,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     newDashboardView: {
-        height: '20%',
+        height: '30%',
         width: '90%',
         backgroundColor: '#ccc',   
         borderRadius: 10

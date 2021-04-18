@@ -78,7 +78,7 @@ const SpeedViewer = (props) => {
 
     useEffect(() => {
         paintLines(speed)
-    })
+    }, [speed])
 
     constructSpedometer();
     return (

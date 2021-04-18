@@ -3,14 +3,13 @@ import { StyleSheet, Text, View } from 'react-native';
 const styles = StyleSheet.create({
     tile: {
         position: 'relative',
-        padding: '5px',
+        padding: 3,
     },
     view: {
         width: '100%',
         height: '100%',
         borderColor: '#222',
-        borderWidth: '3px',
-        borderRadius: '10px',
+        borderRadius: 10,
         borderStyle: 'dashed',
         overflow: 'hidden',
         zIndex: 1

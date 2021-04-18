@@ -72,7 +72,7 @@ const RpmViewer = (props) => {
 
     useEffect(() => {
         paintLines(rpm);
-    })
+    }, [rpm])
     
     const getSizes = (event) => {
         frame.height = event.nativeEvent.layout.height

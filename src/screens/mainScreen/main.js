@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import DistanceViewer from '../../components/distanceViewer/distanceViewer.js';
-import RpmViewer from '../../components/rpmViewer/rpmViewer.js';
-import SpeedViewer from '../../components/speedViewer/speedViewer.js';
+import Editor from '../../components/editor/editor.js';
 import Tile from '../../components/tile/tile'
+import { Data } from '../../context/data.js';
 import styles from './main.style.js'
+import uuid from 'react-native-uuid'
+import LeftMenu from '../../components/editor/LeftMenu/leftMenu.js';
+import RightMenu from '../../components/editor/RightMenu/rightMenu.js';
 
 const MainScreen = (props) => {
+
+    const {
+        editRect, setEditRect,
+        elems, setElems,
+        getConfigJson
+    } = useContext(Data)
+
+    const [frame, setFrame] = useState({
+        height: 0,
+        width: 0
+    })
 
     const rows = 8;
     const cols = 14;
@@ -14,7 +27,16 @@ const MainScreen = (props) => {
     const t_width = 1/cols;
     const t_height = 1/rows;
 
-    const printLayer = (elem) => {
+    const getSizes = (event) => {
+        var aux_frame={
+            height: event.nativeEvent.layout.height,
+            width: event.nativeEvent.layout.width
+        };
+        setFrame({});
+        setFrame(aux_frame);
+    }
+
+    const printLayer = (elem, z_pos) => {
         let x_size = elem.x_f - elem.x_o + 1;
         let y_size = elem.y_f - elem.y_o + 1;
         let width = t_width * x_size;
@@ -22,78 +44,58 @@ const MainScreen = (props) => {
         let s_width = t_width * elem.x_o;
         let s_height = t_height * elem.y_o;
 
-        var array = new Array();
-        array.push(
-            <Tile marginLeft={s_width*100} marginTop={s_height*100} width={width * 100} height={height * 100} key={2}>
-                {elem.elem}
-            </Tile>
-        )
-
         return(
-            <View style={[styles.layer, {zIndex: elem.z_pos}]}>  
-                {array}
+            <View key={uuid.v4()} style={[styles.layer, {zIndex: z_pos}]}>  
+                <Tile marginLeft={s_width*100} marginTop={s_height*frame.height} width={width * 100} height={height * 100} key={uuid.v4()}>
+                    {elem.elem}
+                </Tile>
             </View>
         );
     }
 
     const printAllElems = (elems) => {
         var array = new Array();
-        elems.forEach(elem => {
-            array.push(printLayer(elem));
+        elems.forEach((elem, i) => {
+            array.push(printLayer(elem, elems.length-i));
         })
         return array;
     }
 
-    var elems = new Array();
+    const [elemsToPrint, setElemsToPrint] = useState(new Array());// = printAllElems(elems)
 
-    elems.push({
-        elem: <SpeedViewer/>,
-        x_o: 2,
-        x_f: 11,
-        y_o: 0,
-        y_f: 7,
-        z_pos: 2
-    })
-    elems.push({
-        elem: <RpmViewer/>,
-        x_o: 9,
-        x_f: 11,
-        y_o: 1,
-        y_f: 2,
-        z_pos: 3
-    })
-    elems.push({
-        elem: <View style={styles.green}/>,
-        x_o: 9,
-        x_f: 11,
-        y_o: 3,
-        y_f: 4,
-        z_pos: 4
-    })
+    const updateViews = () => {
+        if (frame.height > 0 && frame.width > 0) {
+            setElemsToPrint(printAllElems(elems))
+        }
+    }
+
+    useEffect(() => {
+        updateViews()
+    }, [frame])
+
+    useEffect(() => {
+        updateViews()
+    }, [elems])
 
     var grid = new Array();
     for (var i = 0; i < rows; i++)
         for (var j = 0; j < cols; j++) {
             let key = (i*cols)+j
             grid.push(
-                <Tile key={key} width={t_width * 100} height={t_height * 100}/>
+                <Tile key={uuid.v4()} width={t_width * 100} height={t_height * 100}/>
             );
         }
 
-    /*
     return (
-        <View style={styles.half_right}>
-            <SpeedViewer/>
-            <RpmViewer/>
-        </View>
-    );
-    */
-    return (
-        <View style={styles.container}> 
-            <View style={styles.grid}> 
-                {grid}
-            </View>
-            {printAllElems(elems)}
+        <View onLayout={getSizes} style={styles.container}>
+            <LeftMenu />
+            <Editor rows={rows} cols={cols}>
+                <View style={styles.grid}> 
+                    {grid}
+                </View>
+                {elemsToPrint}
+            </Editor>
+            <RightMenu />
         </View>
     );
 }
